@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Matematik 7.">
+<title>Øvetest · Matematik 7. klasse</title>
+<style>
+  :root{
+    --papir:#F6F7F3;
+    --tern:#DCE3DA;
+    --tern-kraftig:#C6D1C4;
+    --blaek:#16211C;
+    --blaek-svag:#5F6C64;
+    --groen:#1D6B5B;
+    --rigtig:#2E7D52;
+    --forkert:#B3372C;
+    --kant:#CBD3C9;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--papir);
+    background-image:
+      linear-gradient(var(--tern) 1px, transparent 1px),
+      linear-gradient(90deg, var(--tern) 1px, transparent 1px);
+    background-size:24px 24px;
+    color:var(--blaek);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:clamp(18px,0.9vw + 14px,22px);
+    line-height:1.55;
+    min-height:100dvh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .ui{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .ark{
+    width:100%;
+    max-width:900px;
+    margin:0 auto;
+    min-height:100dvh;
+    padding:clamp(24px,3.4vw,44px) clamp(22px,4vw,56px) 96px;
+    padding-left:max(clamp(22px,4vw,56px), env(safe-area-inset-left));
+    padding-right:max(clamp(22px,4vw,56px), env(safe-area-inset-right));
+  }
+
+  /* ---------- forside ---------- */
+  #forside{padding-top:36px}
+  .titel{font-size:clamp(36px,7vw,76px);line-height:1.02;font-weight:600;letter-spacing:-0.02em;margin:0 0 4px}
+  .undertitel{font-size:clamp(21px,3.4vw,34px);color:var(--groen);margin:0 0 28px;font-weight:400}
+  .fakta{border-top:2px solid var(--blaek);border-bottom:1px solid var(--kant);padding:14px 0;margin:0 0 24px}
+  .fakta dl{display:grid;grid-template-columns:auto 1fr;gap:8px 22px;margin:0;font-size:clamp(16px,1.6vw,19px)}
+  .fakta dt{color:var(--blaek-svag)}
+  .fakta dd{margin:0}
+  .intro{font-size:clamp(17px,1.6vw,19px);color:var(--blaek-svag);margin:0 0 28px;max-width:62ch}
+  .genoptag{
+    background:#fff;border:1px solid var(--groen);border-left:4px solid var(--groen);
+    padding:16px 18px;margin:0 0 24px;font-size:16px;
+  }
+  .genoptag p{margin:0 0 12px}
+
+  /* ---------- knapper ---------- */
+  button{font:inherit;cursor:pointer;border-radius:2px;touch-action:manipulation}
+  .knap{
+    background:var(--groen);color:#fff;border:none;
+    padding:14px 26px;min-height:48px;font-size:17px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-weight:500;
+  }
+  .knap:hover{background:#17574a}
+  .knap.sekundaer{background:transparent;color:var(--blaek);border:1px solid var(--kant)}
+  .knap.sekundaer:hover{border-color:var(--blaek);background:rgba(0,0,0,.03)}
+  .knap:disabled{opacity:.35;cursor:default}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--groen);outline-offset:2px}
+
+  /* ---------- statuslinje ---------- */
+  .status{border-bottom:1px solid var(--kant);padding-bottom:14px;margin-bottom:24px}
+  .statusraekke{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
+  .ur{font-variant-numeric:tabular-nums;font-size:clamp(24px,2.4vw,32px);font-weight:600}
+  .ur.knap-paa-tiden{color:var(--forkert)}
+  .ur small{display:block;font-size:12px;font-weight:400;color:var(--blaek-svag)}
+  .gemt{font-size:13px;color:var(--blaek-svag);text-align:right;min-height:18px}
+
+  .felter{display:flex;gap:2px;flex-wrap:wrap}
+  .felt{
+    width:clamp(30px,3.4vw,40px);height:clamp(30px,3.4vw,40px);padding:0;border:none;background:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .felt i{display:block;width:clamp(16px,1.9vw,22px);height:clamp(16px,1.9vw,22px);border:1px solid var(--tern-kraftig);background:transparent}
+  .felt[data-svaret="ja"] i{background:var(--groen);border-color:var(--groen)}
+  .felt[aria-current="true"] i{outline:2px solid var(--blaek);outline-offset:2px}
+
+  /* ---------- opgave ---------- */
+  .omraade{font-size:14px;color:var(--groen);margin-bottom:16px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .nr{font-size:14px;color:var(--blaek-svag);margin-bottom:10px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .sporgsmaal{font-size:clamp(23px,3.3vw,40px);line-height:1.3;margin:0 0 clamp(30px,4vh,52px);font-weight:500;max-width:22ch;max-width:min(100%,26ch)}
+  .svarlinje{display:flex;align-items:baseline;gap:14px;margin-bottom:clamp(38px,5vh,64px);flex-wrap:wrap}
+  .svarlinje label{font-size:16px;color:var(--blaek-svag)}
+  input[type="text"]{
+    font:inherit;font-size:clamp(26px,2.8vw,38px);font-weight:600;width:clamp(220px,32vw,340px);max-width:100%;
+    padding:8px 4px;border:none;border-bottom:2px solid var(--blaek);
+    background:transparent;color:var(--blaek);border-radius:0;
+  }
+  .enhed{font-size:20px;color:var(--blaek-svag)}
+  .navigation{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+  /* ---------- resultat ---------- */
+  .udskriftshoved{display:none}
+  .score{border-top:2px solid var(--blaek);padding-top:20px;margin-bottom:8px}
+  .score-tal{font-size:clamp(52px,10vw,108px);line-height:1;font-weight:600;letter-spacing:-0.03em}
+  .score-tal span{font-size:.42em;color:var(--blaek-svag);font-weight:400}
+  .score-note{color:var(--blaek-svag);font-size:16px;margin-top:6px}
+
+  .fordeling{margin:28px 0 0;border-top:1px solid var(--kant)}
+  .fordeling div{display:flex;justify-content:space-between;gap:12px;
+    padding:11px 0;border-bottom:1px solid var(--kant);font-size:16px}
+  .fordeling b{font-variant-numeric:tabular-nums;font-weight:600}
+
+  .fokus{background:#fff;border:1px solid var(--kant);border-top:3px solid var(--forkert);padding:20px 22px;margin:32px 0 0}
+  .fokus h3{margin:0 0 4px;font-size:20px;font-weight:600}
+  .fokus p.led{margin:0 0 14px;font-size:15px;color:var(--blaek-svag)}
+  .fokus ul{margin:0;padding-left:20px}
+  .fokus li{margin-bottom:8px;font-size:clamp(16px,1.7vw,19px)}
+  .fokus li b{font-weight:600}
+  .fokus li span{color:var(--blaek-svag);font-size:14px}
+  .fokus.alt-rigtigt{border-top-color:var(--rigtig)}
+
+  .navnelinje{margin:28px 0 0;font-size:15px;color:var(--blaek-svag)}
+  .navnelinje input{font:inherit;font-size:16px;border:none;border-bottom:1px solid var(--kant);
+    background:transparent;padding:4px 2px;width:220px;color:var(--blaek)}
+
+  .rettelse{border-left:3px solid var(--kant);padding:2px 0 2px 16px;margin:0 0 24px;break-inside:avoid;page-break-inside:avoid}
+  .rettelse.ja{border-left-color:var(--rigtig)}
+  .rettelse.nej{border-left-color:var(--forkert)}
+  .rettelse h3{font-size:clamp(19px,1.9vw,23px);font-weight:500;margin:0 0 8px;line-height:1.4}
+  .rettelse .emne{font-size:13px;color:var(--blaek-svag);margin:0 0 6px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .rettelse .dit{font-size:15px;color:var(--blaek-svag);margin:0 0 4px}
+  .rettelse .dit i{font-style:normal;color:var(--forkert);text-decoration:line-through}
+  .rettelse .facit{font-size:16px;margin:0 0 6px}
+  .rettelse .facit b{color:var(--rigtig)}
+  .rettelse .hvorfor{font-size:15px;color:var(--blaek-svag);margin:0}
+
+  h2.afsnit{font-size:15px;color:var(--blaek-svag);font-weight:500;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    border-bottom:1px solid var(--kant);padding-bottom:6px;margin:36px 0 22px}
+
+  .skjult{display:none}
+
+  @media (prefers-reduced-motion:no-preference){
+    #opgave{animation:ind .18s ease-out}
+    @keyframes ind{from{opacity:.4}to{opacity:1}}
+  }
+
+  /* ---------- print ---------- */
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff;background-image:none;font-size:11pt;color:#000;min-height:auto}
+    .ark{max-width:100%;padding:0;min-height:auto}
+    .sporgsmaal{max-width:100%}
+    .status,.navigation,.knap,#forside,#test,.gemt{display:none !important}
+    .udskriftshoved{display:block;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:18px}
+    .udskriftshoved h1{font-size:16pt;margin:0 0 2px;font-weight:600}
+    .udskriftshoved p{margin:0;font-size:10pt;color:#444}
+    .score{border-top:none;padding-top:0}
+    .score-tal{font-size:34pt}
+    .fokus{border:1px solid #000;border-top:3px solid #000;background:#fff}
+    .navnelinje input{border-bottom:1px solid #000}
+    .rettelse .hvorfor,.rettelse .dit,.rettelse .emne{color:#444}
+    a{text-decoration:none;color:#000}
+  }
+</style>
+</head>
+<body>
+<main class="ark">
+
+  <!-- FORSIDE -->
+  <section id="forside">
+    <h1 class="titel">Matematik</h1>
+    <p class="undertitel">Øvetest, 7. klassetrin</p>
+
+    <div class="genoptag ui skjult" id="genoptag">
+      <p id="genoptag-tekst"></p>
+      <button class="knap" id="fortsaet">Fortsæt</button>
+      <button class="knap sekundaer" id="nulstil">Start forfra</button>
+    </div>
+
+    <div class="fakta ui">
+      <dl>
+        <dt>Opgaver</dt><dd>21</dd>
+        <dt>Tid</dt><dd>45 minutter</dd>
+        <dt>Hjælpemidler</dt><dd>Ingen lommeregner. Papir og blyant er tilladt.</dd>
+        <dt>Områder</dt><dd>Tal og algebra · Geometri og måling · Statistik og sandsynlighed</dd>
+      </dl>
+    </div>
+    <p class="intro ui">Skriv svaret som et tal. Brug komma i decimaltal, og lad enheden stå — den skal du ikke skrive. Du kan gå frem og tilbage mellem opgaverne og rette, indtil du afleverer. Svarene gemmes undervejs, så du kan lukke siden og tage fat igen. Uret sættes på pause, når siden lukkes.</p>
+    <button class="knap" id="start">Start testen</button>
+  </section>
+
+  <!-- TEST -->
+  <section id="test" class="skjult">
+    <div class="status ui">
+      <div class="statusraekke">
+        <div class="ur" id="ur">45:00<small>tilbage</small></div>
+        <div class="gemt" id="gemt"></div>
+      </div>
+      <div class="felter" id="felter" role="group" aria-label="Spring til opgave"></div>
+    </div>
+    <div id="opgave">
+      <p class="omraade" id="omraade"></p>
+      <p class="nr" id="nr"></p>
+      <p class="sporgsmaal" id="sporgsmaal"></p>
+      <div class="svarlinje">
+        <label for="svar">Svar</label>
+        <input type="text" id="svar" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <span class="enhed" id="enhed"></span>
+      </div>
+    </div>
+    <div class="navigation ui">
+      <button class="knap sekundaer" id="forrige">Forrige</button>
+      <button class="knap" id="naeste">Næste</button>
+      <button class="knap skjult" id="aflever">Aflever</button>
+    </div>
+  </section>
+
+  <!-- RESULTAT -->
+  <section id="resultat" class="skjult"></section>
+
+</main>
+
+<script>
+const OPGAVER = [
+  {o:"Tal og algebra", t:"Negative tal", q:"Udregn: \u22128 + 15 \u2212 6", e:"", f:"1", alt:["1"],
+   h:"Regn fra venstre: \u22128 + 15 = 7, og 7 \u2212 6 = 1."},
+  {o:"Tal og algebra", t:"Br\u00f8kdel af et tal", q:"Hvad er \u00be af 60?", e:"", f:"45", alt:["45"],
+   h:"60 \u00f7 4 = 15, og 15 \u00b7 3 = 45."},
+  {o:"Tal og algebra", t:"Decimaltal", q:"Udregn: 0,4 \u00b7 250", e:"", f:"100", alt:["100"],
+   h:"0,4 er fire tiendedele. 250 \u00b7 4 = 1000, og 1000 \u00f7 10 = 100."},
+  {o:"Tal og algebra", t:"Procentregning", q:"Hvor meget er 15 % af 320?", e:"", f:"48", alt:["48"],
+   h:"10 % er 32, og 5 % er halvdelen af det, alts\u00e5 16. 32 + 16 = 48."},
+  {o:"Tal og algebra", t:"Ligninger", q:"L\u00f8s ligningen: 4x \u2212 7 = 21", e:"", f:"x = 7", alt:["7","x=7"],
+   h:"L\u00e6g 7 til p\u00e5 begge sider: 4x = 28. Divider med 4: x = 7."},
+  {o:"Tal og algebra", t:"Reduktion af udtryk", q:"Reducer udtrykket: 3a + 5 \u2212 a + 2a", e:"", f:"4a + 5", alt:["4a+5","5+4a"],
+   h:"L\u00e6g a-leddene sammen: 3a \u2212 a + 2a = 4a. Tallet 5 st\u00e5r alene, s\u00e5 der st\u00e5r 4a + 5."},
+  {o:"Tal og algebra", t:"Potenser", q:"Hvad er 2\u2075?", e:"", f:"32", alt:["32"],
+   h:"2 ganget med sig selv fem gange: 2 \u00b7 2 \u00b7 2 \u00b7 2 \u00b7 2 = 32."},
+  {o:"Tal og algebra", t:"Br\u00f8k til decimaltal", q:"Skriv 7/20 som decimaltal.", e:"", f:"0,35", alt:["0.35",".35","0,35"],
+   h:"Forl\u00e6ng med 5, s\u00e5 n\u00e6vneren bliver 100: 35/100 = 0,35."},
+  {o:"Tal og algebra", t:"Procentregning", q:"En tr\u00f8je koster 400 kr. Den s\u00e6ttes ned med 25 %. Hvad koster den nu?", e:"kr", f:"300 kr", alt:["300"],
+   h:"25 % af 400 er 100. 400 \u2212 100 = 300 kr."},
+  {o:"Tal og algebra", t:"Br\u00f8kregning", q:"Udregn: \u00bd + \u2153", e:"", f:"5/6", alt:["5/6","0.8333","5 6"],
+   h:"F\u00e6lles n\u00e6vner er 6: 3/6 + 2/6 = 5/6."},
+  {o:"Tal og algebra", t:"Forhold", q:"Saftevand blandes i forholdet 1 del saft til 4 dele vand. Hvor meget vand skal der i 2 dl saft?", e:"dl", f:"8 dl", alt:["8"],
+   h:"Der skal 4 gange s\u00e5 meget vand som saft: 2 \u00b7 4 = 8 dl."},
+
+  {o:"Geometri og m\u00e5ling", t:"Areal", q:"Et rektangel er 7 cm langt og 4 cm bredt. Hvad er arealet?", e:"cm\u00b2", f:"28 cm\u00b2", alt:["28"],
+   h:"Areal af rektangel = l\u00e6ngde \u00b7 bredde = 7 \u00b7 4 = 28 cm\u00b2."},
+  {o:"Geometri og m\u00e5ling", t:"Areal", q:"En trekant har grundlinjen 10 cm og h\u00f8jden 6 cm. Hvad er arealet?", e:"cm\u00b2", f:"30 cm\u00b2", alt:["30"],
+   h:"Areal af trekant = (grundlinje \u00b7 h\u00f8jde) \u00f7 2 = (10 \u00b7 6) \u00f7 2 = 30 cm\u00b2."},
+  {o:"Geometri og m\u00e5ling", t:"Vinkler", q:"To vinkler i en trekant er 55\u00b0 og 70\u00b0. Hvor stor er den tredje vinkel?", e:"grader", f:"55\u00b0", alt:["55"],
+   h:"Vinklerne i en trekant giver tilsammen 180\u00b0. 180 \u2212 55 \u2212 70 = 55\u00b0."},
+  {o:"Geometri og m\u00e5ling", t:"Omkreds og kvadratrod", q:"Et kvadrat har arealet 36 cm\u00b2. Hvad er omkredsen?", e:"cm", f:"24 cm", alt:["24"],
+   h:"Siden er kvadratroden af 36, alts\u00e5 6 cm. Omkredsen er 4 \u00b7 6 = 24 cm."},
+  {o:"Geometri og m\u00e5ling", t:"Rumfang", q:"En kasse m\u00e5ler 5 cm \u00b7 3 cm \u00b7 2 cm. Hvad er rumfanget?", e:"cm\u00b3", f:"30 cm\u00b3", alt:["30"],
+   h:"Rumfang = l\u00e6ngde \u00b7 bredde \u00b7 h\u00f8jde = 5 \u00b7 3 \u00b7 2 = 30 cm\u00b3."},
+  {o:"Geometri og m\u00e5ling", t:"M\u00e5lestoksforhold", q:"P\u00e5 en tegning i m\u00e5lestoksforholdet 1:200 er en mur 3 cm lang. Hvor lang er muren i virkeligheden, m\u00e5lt i meter?", e:"m", f:"6 m", alt:["6"],
+   h:"3 cm \u00b7 200 = 600 cm, og 600 cm er 6 m."},
+
+  {o:"Statistik og sandsynlighed", t:"Middelv\u00e6rdi", q:"Hvad er middelv\u00e6rdien af tallene 4, 7, 9, 12 og 13?", e:"", f:"9", alt:["9"],
+   h:"L\u00e6g sammen: 4+7+9+12+13 = 45. Divider med antallet: 45 \u00f7 5 = 9."},
+  {o:"Statistik og sandsynlighed", t:"Median", q:"Hvad er medianen af tallene 3, 8, 5, 12 og 7?", e:"", f:"7", alt:["7"],
+   h:"Sorter f\u00f8rst: 3, 5, 7, 8, 12. Medianen er tallet i midten, alts\u00e5 7."},
+  {o:"Statistik og sandsynlighed", t:"Sandsynlighed", q:"Du sl\u00e5r med en almindelig terning. Hvad er sandsynligheden for at sl\u00e5 et lige tal? Svar i procent.", e:"%", f:"50 %", alt:["50","0.5","1/2","50%"],
+   h:"Tre af seks sider er lige (2, 4 og 6). 3/6 = \u00bd = 50 %."},
+  {o:"Statistik og sandsynlighed", t:"Sandsynlighed", q:"En pose indeholder 3 r\u00f8de, 5 bl\u00e5 og 2 gr\u00f8nne kugler. Du tr\u00e6kker \u00e9n kugle. Hvad er sandsynligheden for en gr\u00f8n? Svar i procent.", e:"%", f:"20 %", alt:["20","0.2","1/5","2/10","20%"],
+   h:"Der er 10 kugler i alt, og 2 af dem er gr\u00f8nne. 2/10 = 20 %."}
+];
+
+const NOEGLE = "mat7-oevetest-v1";
+let svar = new Array(OPGAVER.length).fill("");
+let nu = 0, sekunder = 45*60, urId = null, afleveret = false, startet = false;
+let reserve = null; // hukommelse hvis browseren ikke vil gemme
+
+const el = id => document.getElementById(id);
+
+/* ---------- gem og hent ---------- */
+function gemAlt(vis){
+  const data = {v:1, startet, nu, svar, sekunder, afleveret};
+  try{
+    localStorage.setItem(NOEGLE, JSON.stringify(data));
+    if(vis) kvitter("Gemt");
+  }catch(fejl){
+    reserve = data;
+    if(vis) kvitter("Gemt i denne fane");
+  }
+}
+function hentAlt(){
+  try{
+    const raa = localStorage.getItem(NOEGLE);
+    if(raa) return JSON.parse(raa);
+  }catch(fejl){}
+  return reserve;
+}
+function ryd(){
+  try{ localStorage.removeItem(NOEGLE); }catch(fejl){}
+  reserve = null;
+}
+let kvitId = null;
+function kvitter(tekst){
+  el("gemt").textContent = tekst;
+  clearTimeout(kvitId);
+  kvitId = setTimeout(()=>{ el("gemt").textContent = ""; }, 1600);
+}
+
+/* ---------- retning ---------- */
+function normaliser(t){
+  return String(t).toLowerCase().trim()
+    .replace(/\s+/g,"")
+    .replace(/,/g,".")
+    .replace(/kr|cm3|cm\u00b2|cm2|cm\u00b3|cm|dl|\u00b0|grader|procent|%|m(?![0-9])/g,"")
+    .replace(/^x=/,"")
+    .replace(/\.$/,"");
+}
+function erRigtigt(i){
+  const givet = normaliser(svar[i]);
+  if(!givet) return false;
+  return OPGAVER[i].alt.some(a => normaliser(a) === givet);
+}
+
+/* ---------- visning ---------- */
+function tegnFelter(){
+  const b = el("felter");
+  b.innerHTML = "";
+  OPGAVER.forEach((_,i)=>{
+    const k = document.createElement("button");
+    k.className = "felt";
+    k.type = "button";
+    k.innerHTML = "<i></i>";
+    k.setAttribute("aria-label","Opgave "+(i+1));
+    if(svar[i].trim()) k.dataset.svaret = "ja";
+    if(i === nu) k.setAttribute("aria-current","true");
+    k.addEventListener("click",()=>{gem();nu=i;vis();gemAlt(false);});
+    b.appendChild(k);
+  });
+}
+function vis(){
+  const o = OPGAVER[nu];
+  el("omraade").textContent = o.o;
+  el("nr").textContent = "Opgave " + (nu+1) + " af " + OPGAVER.length;
+  el("sporgsmaal").textContent = o.q;
+  el("enhed").textContent = o.e;
+  el("svar").value = svar[nu];
+  el("forrige").disabled = (nu === 0);
+  el("naeste").classList.toggle("skjult", nu === OPGAVER.length-1);
+  el("aflever").classList.toggle("skjult", nu !== OPGAVER.length-1);
+  tegnFelter();
+  el("svar").focus();
+}
+function gem(){ svar[nu] = el("svar").value; }
+function visUr(){
+  const m = Math.floor(Math.max(sekunder,0)/60), s = Math.max(sekunder,0)%60;
+  el("ur").innerHTML = m + ":" + String(s).padStart(2,"0") + "<small>tilbage</small>";
+  el("ur").classList.toggle("knap-paa-tiden", sekunder <= 300);
+}
+function tikTak(){
+  sekunder--;
+  visUr();
+  if(sekunder % 5 === 0) gemAlt(false);
+  if(sekunder <= 0){ clearInterval(urId); gem(); aflever(); }
+}
+function koer(){
+  el("forside").classList.add("skjult");
+  el("test").classList.remove("skjult");
+  startet = true;
+  visUr();
+  vis();
+  clearInterval(urId);
+  urId = setInterval(tikTak,1000);
+}
+
+/* ---------- resultat ---------- */
+function aflever(){
+  if(afleveret) return;
+  afleveret = true;
+  clearInterval(urId);
+  gem();
+  gemAlt(false);
+  el("test").classList.add("skjult");
+
+  const rigtige = OPGAVER.map((_,i)=>erRigtigt(i));
+  const point = rigtige.filter(Boolean).length;
+  const brugt = 45*60 - Math.max(sekunder,0);
+  const idag = new Date().toLocaleDateString("da-DK",{day:"numeric",month:"long",year:"numeric"});
+
+  const omraader = {}, emner = {};
+  OPGAVER.forEach((o,i)=>{
+    omraader[o.o] = omraader[o.o] || {r:0,i:0};
+    omraader[o.o].i++;
+    if(rigtige[i]) omraader[o.o].r++;
+    emner[o.t] = emner[o.t] || {r:0,i:0,nr:[]};
+    emner[o.t].i++;
+    if(rigtige[i]) emner[o.t].r++; else emner[o.t].nr.push(i+1);
+  });
+
+  let html = '<div class="udskriftshoved"><h1>\u00d8vetest \u00b7 Matematik, 7. klassetrin</h1>'
+    + '<p>Rettet ' + idag + '</p></div>';
+
+  html += '<div class="score"><div class="score-tal">'+point+' <span>af '+OPGAVER.length+'</span></div>'
+    + '<p class="score-note ui">Brugt tid: '+Math.floor(brugt/60)+' min '+(brugt%60)+' sek.</p></div>';
+
+  html += '<div class="fordeling ui">';
+  for(const [navn,t] of Object.entries(omraader)){
+    html += '<div><span>'+navn+'</span><b>'+t.r+'/'+t.i+'</b></div>';
+  }
+  html += '</div>';
+
+  const svage = Object.entries(emner).filter(([,t]) => t.nr.length > 0)
+    .sort((a,b) => b[1].nr.length - a[1].nr.length);
+  if(svage.length){
+    html += '<div class="fokus ui"><h3>Det skal der \u00f8ves p\u00e5</h3>'
+      + '<p class="led">Emner med mindst \u00e9n fejl, sorteret efter antal fejl.</p><ul>';
+    svage.forEach(([navn,t])=>{
+      html += '<li><b>'+navn+'</b> \u2014 '+t.r+' af '+t.i+' rigtige '
+        + '<span>(opgave '+t.nr.join(", ")+')</span></li>';
+    });
+    html += '</ul></div>';
+  }else{
+    html += '<div class="fokus alt-rigtigt ui"><h3>Ingen fejl</h3>'
+      + '<p class="led">Alle 21 opgaver er rigtige. N\u00e6ste gang kan sv\u00e6rhedsgraden s\u00e6ttes op.</p></div>';
+  }
+
+  html += '<p class="navnelinje ui">Navn: <input type="text" placeholder="skriv f\u00f8r udskrift" autocomplete="off"></p>';
+
+  html += '<div class="navigation ui" style="margin-top:28px">'
+    + '<button class="knap" onclick="window.print()">Print resultatet</button>'
+    + '<button class="knap sekundaer" id="igen">Tag testen forfra</button></div>';
+
+  html += '<h2 class="afsnit">Gennemgang</h2>';
+  OPGAVER.forEach((o,i)=>{
+    const ok = rigtige[i];
+    const dit = svar[i].trim();
+    html += '<div class="rettelse '+(ok?'ja':'nej')+'">'
+      + '<p class="emne">'+(i+1)+'. '+o.t+'</p>'
+      + '<h3>'+o.q+'</h3>';
+    if(ok){
+      html += '<p class="facit">Rigtigt: <b>'+o.f+'</b></p>';
+    }else{
+      html += '<p class="dit ui">Dit svar: '+(dit ? '<i>'+dit+'</i>' : 'tomt')+'</p>'
+        + '<p class="facit">Facit: <b>'+o.f+'</b></p>';
+    }
+    html += '<p class="hvorfor ui">'+o.h+'</p></div>';
+  });
+
+  const r = el("resultat");
+  r.innerHTML = html;
+  r.classList.remove("skjult");
+  el("igen").addEventListener("click",()=>{ ryd(); location.reload(); });
+  window.scrollTo(0,0);
+}
+
+/* ---------- opstart ---------- */
+const gammelt = hentAlt();
+if(gammelt && gammelt.startet){
+  const besvaret = gammelt.svar.filter(s => s && s.trim()).length;
+  const m = Math.floor(Math.max(gammelt.sekunder,0)/60);
+  el("genoptag").classList.remove("skjult");
+  el("genoptag-tekst").textContent = gammelt.afleveret
+    ? "Der ligger en afleveret test. Du kan se og printe resultatet igen."
+    : "Der ligger en p\u00e5begyndt test: " + besvaret + " af 21 opgaver besvaret, " + m + " minutter tilbage.";
+  el("fortsaet").textContent = gammelt.afleveret ? "Se resultatet" : "Forts\u00e6t";
+  el("start").classList.add("skjult");
+  el("fortsaet").addEventListener("click",()=>{
+    svar = gammelt.svar;
+    nu = gammelt.nu;
+    sekunder = gammelt.sekunder;
+    if(gammelt.afleveret){
+      el("forside").classList.add("skjult");
+      afleveret = false;
+      aflever();
+    }else{
+      koer();
+    }
+  });
+  el("nulstil").addEventListener("click",()=>{ ryd(); location.reload(); });
+}
+
+el("start").addEventListener("click",()=>{ koer(); gemAlt(false); });
+el("naeste").addEventListener("click",()=>{gem(); if(nu<OPGAVER.length-1){nu++;vis();gemAlt(true);}});
+el("forrige").addEventListener("click",()=>{gem(); if(nu>0){nu--;vis();gemAlt(true);}});
+el("aflever").addEventListener("click",aflever);
+el("svar").addEventListener("input",()=>{gem();tegnFelter();});
+el("svar").addEventListener("change",()=>{gem();gemAlt(true);});
+el("svar").addEventListener("keydown",e=>{
+  if(e.key === "Enter"){
+    e.preventDefault();
+    gem();
+    gemAlt(true);
+    if(nu < OPGAVER.length-1){ nu++; vis(); } else { aflever(); }
+  }
+});
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden && startet && !afleveret){ gem(); gemAlt(false); clearInterval(urId); }
+  else if(!document.hidden && startet && !afleveret){ clearInterval(urId); urId = setInterval(tikTak,1000); }
+});
+window.addEventListener("pagehide",()=>{ if(startet){ gem(); gemAlt(false); } });
+</script>
+</body>
+</html>
